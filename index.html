@@ -13,13 +13,14 @@
             --text-dark: #333;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-light);
-            margin: 0;
-            color: var(--text-dark);
-            line-height: 1.6;
-        }
+     body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-light);
+    margin: 0;
+    color: var(--text-dark);
+    line-height: 1.6;
+    font-size: 14px; /* <--- Add this (Default is usually 16px) */
+}
 
         /* Glassmorphism Styles */
         .glass {
@@ -194,7 +195,7 @@
         .wa-float {
             position: fixed;
             bottom: 10px;
-            right: 115px;
+            right: 150px;
             background: var(--accent);
             border-radius: 50%;
             width: 60px;
@@ -4321,7 +4322,7 @@
         // --- 1. CONFIGURATION & TRACKING INITIALIZATION ---
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyNhWypdwiWUP4mJjDVldH4vxwLKOsbBnIFkA-EHXWA9yitFkAHU3-hhuzcSKwkyf_gfg/exec"; 
         const MY_PHONE_NUMBER = "919417063467"; 
-        const REQUIRED_SHARES = 3; 
+        const REQUIRED_SHARES = 1; 
         
         const pageLoadTime = Date.now(); 
         let shareCount = 0;

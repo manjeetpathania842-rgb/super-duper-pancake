@@ -4317,14 +4317,13 @@
 
     <!-- Application Script -->
    <script>
-    // --- 1. CONFIGURATION & TRACKING INITIALIZATION ---
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyNhWypdwiWUP4mJjDVldH4vxwLKOsbBnIFkA-EHXWA9yitFkAHU3-hhuzcSKwkyf_gfg/exec"; // Replace with your new Web App URL
-    const MY_PHONE_NUMBER = "919417063467"; // Your WhatsApp Number
-    const REQUIRED_SHARES = 1;
+    // --- 1. CONFIGURATION ---
+    // PASTE YOUR GOOGLE WEB APP URL BELOW
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyNhWypdwiWUP4mJjDVldH4vxwLKOsbBnIFkA-EHXWA9yitFkAHU3-hhuzcSKwkyf_gfg/exec"; 
+    const MY_PHONE_NUMBER = "91XXXXXXXXXX"; // Your WhatsApp Number
+    const REQUIRED_SHARES = 3;
     
-    // Start the timer as soon as the page loads
     const pageLoadTime = Date.now(); 
-
     let shareCount = 0;
     const urlParams = new URLSearchParams(window.location.search);
     const referrer = urlParams.get('ref') || "Direct/Organic";
@@ -4338,7 +4337,7 @@
     const shareStatus = document.getElementById('shareStatus');
     const floatingWa = document.getElementById('floatingWa');
 
-    // --- 2. SHARE LOGIC (Your Existing Logic) ---
+    // --- 2. SHARE LOGIC ---
     shareBtn.addEventListener('click', () => {
         const name = userNameInput.value.trim();
         if (!name) {
@@ -4346,12 +4345,10 @@
             return;
         }
 
-        const shareText = encodeURIComponent(`Hey! I found these amazing Corporate Governance predictions. Check them out here: ${window.location.href}`);
+        const shareText = encodeURIComponent(`Hey! I found these Corporate Governance notes. Check them here: ${window.location.href}`);
         const whatsappUrl = `https://wa.me/?text=${shareText}`;
-        
         window.open(whatsappUrl, '_blank');
 
-        // Increment share count
         shareCount++;
         shareStatus.innerText = `Shared ${shareCount}/${REQUIRED_SHARES} times`;
 
@@ -4359,54 +4356,47 @@
             unlockBtn.disabled = false;
             unlockBtn.style.opacity = "1";
             unlockBtn.style.cursor = "pointer";
-            shareStatus.innerText = "Target reached! You can now unlock the document.";
+            shareStatus.innerText = "Target reached! Click Unlock below.";
             shareStatus.style.color = "#25D366";
         }
     });
 
-    // --- 3. UNLOCK & DATA SENDING (Updated with Time Spent) ---
+    // --- 3. UNLOCK LOGIC ---
     unlockBtn.addEventListener('click', () => {
         const name = userNameInput.value.trim();
         if (shareCount >= REQUIRED_SHARES) {
-            unlockNow(name);
-        }
-    });
+            // Calculate Time Spent
+            const unlockTime = Date.now();
+            const timeSpentSeconds = Math.floor((unlockTime - pageLoadTime) / 1000);
 
-    function unlockNow(name) {
-        // Calculate Time Spent
-        const unlockTime = Date.now();
-        const timeSpentSeconds = Math.floor((unlockTime - pageLoadTime) / 1000);
+            // UI Changes
+            lockScreen.style.display = 'none';
+            mainContent.style.display = 'block';
+            window.scrollTo(0, 0);
 
-        // UI Changes
-        lockScreen.style.display = 'none';
-        mainContent.style.display = 'block';
-        window.scrollTo(0, 0);
+            // Update WhatsApp Link
+            const directMsg = encodeURIComponent(`Hi, I am ${name}. I have a query about the notes.`);
+            floatingWa.href = `https://wa.me/${MY_PHONE_NUMBER}?text=${directMsg}`;
 
-        // Update WhatsApp Floating Button (Existing Logic)
-        const directMsg = encodeURIComponent(`Hi, I am ${name}. I have a query about the notes.`);
-        floatingWa.href = `https://wa.me/${MY_PHONE_NUMBER}?text=${directMsg}`;
+            // Send to Google Sheets
+            const trackingData = {
+                name: name,
+                referredBy: referrer,
+                timestamp: new Date().toLocaleString(),
+                action: "Document Unlocked",
+                timeSpent: timeSpentSeconds + " seconds"
+            };
 
-        // Prepare Data for Google Sheets
-        const trackingData = {
-            name: name,
-            referredBy: referrer,
-            timestamp: new Date().toLocaleString(),
-            action: "Document Unlocked",
-            timeSpent: timeSpentSeconds + " seconds"
-        };
-
-        // Send to Google Apps Script
-        if (SCRIPT_URL && SCRIPT_URL !== "https://script.google.com/macros/s/AKfycbyNhWypdwiWUP4mJjDVldH4vxwLKOsbBnIFkA-EHXWA9yitFkAHU3-hhuzcSKwkyf_gfg/exec") {
             fetch(SCRIPT_URL, {
                 method: "POST",
-                mode: "no-cors", // Keeps it simple for Google Scripts
+                mode: "no-cors",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(trackingData)
-            })
-            .then(() => console.log("Data logged successfully"))
-            .catch(err => console.error("Tracking Error:", err));
+            }).catch(err => console.log("Tracking ignored or failed:", err));
+        } else {
+            alert(`Please share ${REQUIRED_SHARES - shareCount} more times to unlock.`);
         }
-    }
+    });
 </script>
 </body>
 </html>

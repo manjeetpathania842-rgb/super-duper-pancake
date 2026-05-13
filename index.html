@@ -62,16 +62,27 @@
             -webkit-backdrop-filter: blur(8px);
         }
 
-        .lock-card {
-            background: rgba(255, 255, 255, 0.85);
-            padding: 40px 30px;
-            border-radius: 16px;
-            text-align: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            width: 90%;
-            max-width: 400px;
-        }
+       .lock-card {
+    background: white;
+    padding: 20px;            /* Reduced padding from 40px to 20px */
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    width: 90%;               /* Takes up 90% of screen on mobile */
+    max-width: 320px;         /* Limits size on desktop to look compact */
+    text-align: center;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+/* Adjust the input field inside the card to be smaller */
+#userName {
+    width: 100%;
+    padding: 10px;            /* Slightly smaller padding */
+    margin: 15px 0;
+    font-size: 14px;          /* Smaller font */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box;   /* Ensures padding doesn't break width */
+}
 
         .lock-card h2 {
             margin-top: 0;

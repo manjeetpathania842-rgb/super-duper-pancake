@@ -4316,91 +4316,97 @@
 </a>
 
     <!-- Application Script -->
-    <script>
-        // --- CONFIGURATION ---
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx9UzZ_NE1jBHzqvzN4j2lB9YkU768_YCrpzBWFMs6KPXCJkwqk10Lf6PQ-s2dwoUkd5g/exec"; // PASTE YOUR URL HERE
-const MY_PHONE_NUMBER = "919417063467"; // Your 10-digit number with country code
-const REQUIRED_SHARES = 2;
-
-let shareCount = 0;
-const startTime = Date.now();
-
-// --- DOM ELEMENTS ---
-const lockScreen = document.getElementById('lock-screen');
-const mainContent = document.getElementById('main-content');
-const shareBtn = document.getElementById('waShareBtn');
-const nameInput = document.getElementById('userName');
-const errorMsg = document.getElementById('errorMsg');
-const floatingWa = document.getElementById('floating-wa');
-
-// 1. Detect Referral (Who referred the current visitor?)
-const urlParams = new URLSearchParams(window.location.search);
-const referrer = urlParams.get('ref') || "Direct/Search";
-
-// 2. Handle WhatsApp Share Button
-shareBtn.addEventListener('click', function() {
-    const name = nameInput.value.trim();
-
-    if (!name) {
-        errorMsg.style.display = 'block';
-        nameInput.focus();
-        return;
-    }
-    errorMsg.style.display = 'none';
-
-    shareCount++;
-    shareBtn.innerText = `Share on WhatsApp (${shareCount}/${REQUIRED_SHARES})`;
-
-    // Generate Viral Referral Link (Current user becomes the referrer for the next person)
-    const baseUrl = window.location.href.split('?')[0];
-    const myReferralLink = `${baseUrl}?ref=${encodeURIComponent(name)}`;
-    const shareMessage = encodeURIComponent(`Check out these Corporate Governance PREDICTIONS from MANJEET ENTERPRISES! Unlock them here: ${myReferralLink}`);
+   <script>
+    // --- 1. CONFIGURATION & TRACKING INITIALIZATION ---
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyNhWypdwiWUP4mJjDVldH4vxwLKOsbBnIFkA-EHXWA9yitFkAHU3-hhuzcSKwkyf_gfg/exec"; // Replace with your new Web App URL
+    const MY_PHONE_NUMBER = "919417063467"; // Your WhatsApp Number
+    const REQUIRED_SHARES = 1;
     
-    // Open WhatsApp
-    window.open(`https://api.whatsapp.com/send?text=${shareMessage}`, '_blank');
+    // Start the timer as soon as the page loads
+    const pageLoadTime = Date.now(); 
 
-    // Unlock after 3 clicks
-    if (shareCount >= REQUIRED_SHARES) {
-        unlockNow(name);
+    let shareCount = 0;
+    const urlParams = new URLSearchParams(window.location.search);
+    const referrer = urlParams.get('ref') || "Direct/Organic";
+
+    // Select UI Elements
+    const lockScreen = document.getElementById('lockScreen');
+    const mainContent = document.getElementById('mainContent');
+    const userNameInput = document.getElementById('userName');
+    const shareBtn = document.getElementById('shareBtn');
+    const unlockBtn = document.getElementById('unlockBtn');
+    const shareStatus = document.getElementById('shareStatus');
+    const floatingWa = document.getElementById('floatingWa');
+
+    // --- 2. SHARE LOGIC (Your Existing Logic) ---
+    shareBtn.addEventListener('click', () => {
+        const name = userNameInput.value.trim();
+        if (!name) {
+            alert("Please enter your name first!");
+            return;
+        }
+
+        const shareText = encodeURIComponent(`Hey! I found these amazing Corporate Governance predictions. Check them out here: ${window.location.href}`);
+        const whatsappUrl = `https://wa.me/?text=${shareText}`;
+        
+        window.open(whatsappUrl, '_blank');
+
+        // Increment share count
+        shareCount++;
+        shareStatus.innerText = `Shared ${shareCount}/${REQUIRED_SHARES} times`;
+
+        if (shareCount >= REQUIRED_SHARES) {
+            unlockBtn.disabled = false;
+            unlockBtn.style.opacity = "1";
+            unlockBtn.style.cursor = "pointer";
+            shareStatus.innerText = "Target reached! You can now unlock the document.";
+            shareStatus.style.color = "#25D366";
+        }
+    });
+
+    // --- 3. UNLOCK & DATA SENDING (Updated with Time Spent) ---
+    unlockBtn.addEventListener('click', () => {
+        const name = userNameInput.value.trim();
+        if (shareCount >= REQUIRED_SHARES) {
+            unlockNow(name);
+        }
+    });
+
+    function unlockNow(name) {
+        // Calculate Time Spent
+        const unlockTime = Date.now();
+        const timeSpentSeconds = Math.floor((unlockTime - pageLoadTime) / 1000);
+
+        // UI Changes
+        lockScreen.style.display = 'none';
+        mainContent.style.display = 'block';
+        window.scrollTo(0, 0);
+
+        // Update WhatsApp Floating Button (Existing Logic)
+        const directMsg = encodeURIComponent(`Hi, I am ${name}. I have a query about the notes.`);
+        floatingWa.href = `https://wa.me/${MY_PHONE_NUMBER}?text=${directMsg}`;
+
+        // Prepare Data for Google Sheets
+        const trackingData = {
+            name: name,
+            referredBy: referrer,
+            timestamp: new Date().toLocaleString(),
+            action: "Document Unlocked",
+            timeSpent: timeSpentSeconds + " seconds"
+        };
+
+        // Send to Google Apps Script
+        if (SCRIPT_URL && SCRIPT_URL !== "https://script.google.com/macros/s/AKfycbyNhWypdwiWUP4mJjDVldH4vxwLKOsbBnIFkA-EHXWA9yitFkAHU3-hhuzcSKwkyf_gfg/exec") {
+            fetch(SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors", // Keeps it simple for Google Scripts
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(trackingData)
+            })
+            .then(() => console.log("Data logged successfully"))
+            .catch(err => console.error("Tracking Error:", err));
+        }
     }
-});
-
-// 3. Unlock and Send Data to Google Sheets
-function unlockNow(name) {
-    // Hide lock, show content
-    lockScreen.style.display = 'none';
-    mainContent.style.display = 'block';
-    window.scrollTo(0, 0);
-
-    // Update Floating Button with a personalized message to you
-    const directMsg = encodeURIComponent(`Hi Manjeet, I am ${name}. I have a query about the notes.`);
-    floatingWa.href = `https://wa.me/${MY_PHONE_NUMBER}?text=${directMsg}`;
-
-    // Prepare data for Google Sheets
-    const data = {
-        name: name,
-        referredBy: referrer,
-        timestamp: new Date().toLocaleString(),
-        action: "Document Unlocked"
-    };
-
-    // Send to Google Apps Script
-    if (SCRIPT_URL !== "https://script.google.com/macros/s/AKfycbx9UzZ_NE1jBHzqvzN4j2lB9YkU768_YCrpzBWFMs6KPXCJkwqk10Lf6PQ-s2dwoUkd5g/exec") {
-        fetch(SCRIPT_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data)
-        }).catch(err => console.log("Tracking log failed, but content unlocked."));
-    }
-}
-
-// 4. Mobile View: Prevent keyboard overlay issues
-nameInput.addEventListener('focus', () => {
-    setTimeout(() => {
-        nameInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 300);
-});
-    </script>
+</script>
 </body>
 </html>

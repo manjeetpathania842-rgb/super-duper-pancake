@@ -234,6 +234,23 @@
             main { padding: 20px; margin: 15px; }
             .lock-card { padding: 30px 20px; }
         }
+        @media (max-width: 480px) {
+    .container {
+        padding: 0 12px; /* Even smaller gaps for small phones */
+    }
+    
+    .header h1 {
+        font-size: 1.1rem;
+    }
+
+    /* Make content sections bleed closer to edges */
+    .content-section {
+        margin: 10px 0;
+        padding: 15px 5px;
+        border-radius: 0; /* Remove rounded corners on sections for full-width look */
+        border: none;
+    }
+}
     </style>
 </head>
 <body>
